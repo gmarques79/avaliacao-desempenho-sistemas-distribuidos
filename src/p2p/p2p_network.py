@@ -24,7 +24,7 @@ from src.p2p.tracker import SwarmTracker
 def run_p2p_session(
     file_path: Path | str,
     num_leechers: int,
-    chunk_size: int = 256 * 1024,  # 256 KB por bloco
+    chunk_size: int | None = None,
 ) -> List[TransferResult]:
     """
     Executa um experimento P2P completo com 1 Seeder inicial e `num_leechers` Leechers.
@@ -32,6 +32,15 @@ def run_p2p_session(
     """
     path = Path(file_path)
     file_size = os.path.getsize(path)
+
+    # Dimensionamento adaptativo do chunk para manter total de blocos equilibrado
+    if chunk_size is None:
+        if file_size <= 10 * 1024 * 1024:
+            chunk_size = 256 * 1024       # 256 KB para 5MB (~20 chunks)
+        elif file_size <= 100 * 1024 * 1024:
+            chunk_size = 1024 * 1024      # 1 MB para 50MB (~50 chunks)
+        else:
+            chunk_size = 4 * 1024 * 1024  # 4 MB para 500MB (~125 chunks)
 
     # 1. Inicia o Tracker
     tracker = SwarmTracker(host="127.0.0.1", port=0)
