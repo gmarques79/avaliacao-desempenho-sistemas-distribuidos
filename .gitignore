@@ -1,0 +1,35 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# IDE and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and runtime artifacts
+*.log
+*.tmp
+*.pid
+
+# Data files (Never commit 5MB, 50MB, 500MB test payload files)
+data/
+test_files/
+*.bin
+*.dat
+*.iso
+
+# OS generated files
+.DS_Store
+Thumbs.db
