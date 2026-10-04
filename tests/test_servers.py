@@ -11,6 +11,7 @@ import pytest
 
 from src.client.client import TCPClient
 from src.common.file_utils import generate_test_file
+from src.servers.concurrent_server import ConcurrentServer
 from src.servers.sequential_server import SequentialServer
 
 
@@ -81,3 +82,38 @@ def test_sequential_server_multiple_clients(temp_environment):
     finally:
         server.stop()
         server_thread.join(timeout=1.0)
+
+
+def test_concurrent_server_multiple_clients(temp_environment):
+    dir_path, filename, expected_size = temp_environment
+
+    server = ConcurrentServer(host="127.0.0.1", port=0, data_dir=dir_path)
+    server_thread = threading.Thread(target=server.start, daemon=True)
+    server_thread.start()
+
+    time.sleep(0.2)
+    port = server.bound_port
+
+    results = []
+    num_clients = 4
+
+    def run_client():
+        client = TCPClient(host="127.0.0.1", port=port)
+        res = client.download_file(filename)
+        results.append(res)
+
+    threads = [threading.Thread(target=run_client) for _ in range(num_clients)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(timeout=10.0)
+
+    try:
+        assert len(results) == num_clients
+        for res in results:
+            assert res.success is True
+            assert res.bytes_received == expected_size
+    finally:
+        server.stop()
+        server_thread.join(timeout=1.0)
+
