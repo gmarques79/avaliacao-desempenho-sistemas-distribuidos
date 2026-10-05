@@ -203,9 +203,7 @@ class P2PNode:
         if self.is_seeder:
             raise RuntimeError("Nó configurado como Seeder não realiza download.")
 
-        # =========================================================================
-        # INÍCIO FORMAL DA MEDIÇÃO DA TRANSFERÊNCIA P2P
-        # =========================================================================
+        # Início da medição de transferência P2P
         start_time = time.perf_counter()
 
         missing_chunks = list(range(self.total_chunks))
@@ -217,7 +215,6 @@ class P2PNode:
         while missing_chunks and self._running.is_set():
             chunk_idx = missing_chunks.pop(0)
 
-            # Consulta no tracker quem possui este bloco
             peers = self.get_peers_for_chunk(chunk_idx)
             if not peers:
                 # Bloco ainda não foi propagado: recoloca na fila com breve espera
@@ -236,7 +233,7 @@ class P2PNode:
                     p_sock.connect((chosen_peer["host"], chosen_peer["port"]))
                     p_sock.sendall(f"GET_CHUNK {chunk_idx}\n".encode("utf-8"))
 
-                    # Lê cabeçalho do chunk: 8 bytes (unsigned int idx, unsigned int len)
+                    # Cabeçalho do chunk: 4 bytes índice + 4 bytes tamanho
                     header = recv_exact(p_sock, 8)
                     ret_idx, chunk_len = struct.unpack("!II", header)
 
@@ -257,9 +254,7 @@ class P2PNode:
                 missing_chunks.append(chunk_idx)
                 time.sleep(0.01)
 
-        # =========================================================================
-        # FIM FORMAL DA MEDIÇÃO DA TRANSFERÊNCIA P2P
-        # =========================================================================
+        # Fim da medição de transferência P2P
         end_time = time.perf_counter()
         elapsed_time = end_time - start_time
 

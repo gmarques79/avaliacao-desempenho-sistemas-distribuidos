@@ -74,7 +74,6 @@ class ConcurrentServer:
                 except OSError:
                     break
 
-                # Cria e despacha uma nova thread para o cliente
                 thread = threading.Thread(
                     target=handle_file_request,
                     args=(conn, self.data_dir, self.buffer_size),

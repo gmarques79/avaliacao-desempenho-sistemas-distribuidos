@@ -33,3 +33,7 @@ test_files/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Evaluation and temporary review files
+*.pdf
+comparacao_requisitos_pdf.md

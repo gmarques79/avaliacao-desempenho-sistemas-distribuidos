@@ -59,7 +59,6 @@ def aggregate_experiments(
 
     df = pd.read_csv(raw_path)
 
-    # Filtra apenas execuções bem-sucedidas
     if "success" in df.columns:
         df = df[df["success"] == True]
 

@@ -78,19 +78,14 @@ class TCPClient:
         expected_bytes = 0
 
         try:
-            # 1. Estabelece a conexão física TCP
             sock.connect((self.host, self.port))
 
-            # =========================================================================
-            # INÍCIO FORMAL DA MEDIÇÃO DA TRANSFERÊNCIA
-            # =========================================================================
+            # Início da medição estrita de transferência
             start_time = time.perf_counter()
 
-            # 2. Envia a requisição do arquivo solicitado
             request_payload = encode_request(filename)
             sock.sendall(request_payload)
 
-            # 3. Lê o cabeçalho binário (8 bytes com o tamanho do arquivo)
             header_bytes = recv_exact(sock, HEADER_SIZE)
             expected_bytes = decode_header(header_bytes)
 
@@ -106,7 +101,7 @@ class TCPClient:
                     error_message=f"Arquivo '{filename}' não encontrado ou vazio no servidor.",
                 )
 
-            # 4. Recebe o fluxo de dados em chunks, descartando-os sem salvar em disco
+            # Consumo em fluxo direto na memória sem persistência em disco
             while bytes_received < expected_bytes:
                 to_read = min(self.buffer_size, expected_bytes - bytes_received)
                 chunk = sock.recv(to_read)
@@ -115,11 +110,8 @@ class TCPClient:
                         f"Conexão encerrada prematuramente. Recebidos {bytes_received} de {expected_bytes} bytes."
                     )
                 bytes_received += len(chunk)
-                # O chunk é descartado pelo coletor do Python sem escrita em disco
 
-            # =========================================================================
-            # FIM FORMAL DA MEDIÇÃO DA TRANSFERÊNCIA
-            # =========================================================================
+            # Fim da medição estrita de transferência
             end_time = time.perf_counter()
             elapsed_time = end_time - start_time
 

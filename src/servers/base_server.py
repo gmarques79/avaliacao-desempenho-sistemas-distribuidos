@@ -38,14 +38,12 @@ def handle_file_request(
         file_path = data_dir / filename
 
         if not file_path.is_file():
-            # Arquivo não encontrado: envia tamanho 0
             conn.sendall(encode_header(0))
             return
 
         file_size = os.path.getsize(file_path)
         conn.sendall(encode_header(file_size))
 
-        # Transmissão em blocos do arquivo
         with open(file_path, "rb") as f:
             while True:
                 chunk = f.read(buffer_size)

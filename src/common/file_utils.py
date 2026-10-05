@@ -7,7 +7,6 @@ import os
 from pathlib import Path
 from typing import Dict
 
-# Tamanhos canônicos especificados na atividade
 SIZES_MAP: Dict[str, int] = {
     "5MB": 5 * 1024 * 1024,
     "50MB": 50 * 1024 * 1024,

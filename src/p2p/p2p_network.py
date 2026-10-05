@@ -42,7 +42,6 @@ def run_p2p_session(
         else:
             chunk_size = 4 * 1024 * 1024  # 4 MB para 500MB (~125 chunks)
 
-    # 1. Inicia o Tracker
     tracker = SwarmTracker(host="127.0.0.1", port=0)
     tracker.set_file_info(
         file_name=path.name,
@@ -55,7 +54,6 @@ def run_p2p_session(
 
     tracker_port = tracker.bound_port
 
-    # 2. Inicia o Seeder inicial
     seeder = P2PNode(
         peer_id="seeder-0",
         tracker_host="127.0.0.1",
@@ -68,7 +66,6 @@ def run_p2p_session(
     seeder.start_server()
     seeder.register_in_tracker()
 
-    # 3. Inicializa os Leechers
     leechers: List[P2PNode] = []
     for i in range(num_leechers):
         leecher = P2PNode(
@@ -84,14 +81,12 @@ def run_p2p_session(
         leecher.register_in_tracker()
         leechers.append(leecher)
 
-    # 4. Dispara o download de todos os leechers simultaneamente
     results: List[TransferResult] = []
     with ThreadPoolExecutor(max_workers=max(num_leechers, 1)) as executor:
         futures = [executor.submit(node.download_file_p2p) for node in leechers]
         for f in futures:
             results.append(f.result())
 
-    # 5. Encerramento gracioso de todos os participantes
     for leecher in leechers:
         leecher.stop()
     seeder.stop()

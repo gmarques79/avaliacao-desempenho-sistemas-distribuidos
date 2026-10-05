@@ -25,7 +25,6 @@ class SwarmTracker:
         self._running = threading.Event()
         self._lock = threading.Lock()
 
-        # Metadados do arquivo
         self.file_name: str = ""
         self.file_size: int = 0
         self.chunk_size: int = 0

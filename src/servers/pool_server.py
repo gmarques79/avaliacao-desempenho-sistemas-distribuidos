@@ -85,7 +85,6 @@ class PoolServer:
                 except OSError:
                     break
 
-                # Submete o atendimento ao pool de threads configurado
                 if self._executor and not self._executor._shutdown:
                     self._executor.submit(
                         handle_file_request,

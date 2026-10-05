@@ -14,11 +14,10 @@ import socket
 import struct
 from typing import Optional
 
-# Configurações padrão de rede
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 5001
-DEFAULT_BUFFER_SIZE = 64 * 1024  # 64 KB por leitura de socket
-HEADER_FORMAT = "!Q"             # 8 bytes para tamanho do arquivo (unsigned long long)
+DEFAULT_BUFFER_SIZE = 64 * 1024
+HEADER_FORMAT = "!Q"
 HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
 
 
