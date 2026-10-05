@@ -4,6 +4,7 @@ Projeto prático de avaliação de desempenho na transferência de arquivos sob 
 
 * **Repositório GitHub:** [https://github.com/gmarques79/avaliacao-desempenho-sistemas-distribuidos](https://github.com/gmarques79/avaliacao-desempenho-sistemas-distribuidos)
 * **Autor:** Gustavo Marques (UFS)
+* **Relatório:** https://docs.google.com/document/d/1M21r2vP2vG1t1O6oQ4b8mpjbqeX0UI3s/edit?usp=sharing&ouid=108975621930995309183&rtpof=true&sd=true
 
 ---
 
